@@ -19,6 +19,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
+//    1. Добавьте методы onAttach и onDetach в интерфейс PresenterContract.
+//    Теперь все Презентеры должны учитывать жизненный цикл View, который они хранят.
+//    2. Покройте тестами DetailsPresenter.
+//    3. Покройте тестами методы onAttach и onDetach в SearchPresenter.
+//    *. Выберите приложение из предыдущих курсов и покройте одну или несколько Активити тестами.
+
     private val adapter = SearchResultAdapter()
     private val presenter: PresenterSearchContract = SearchPresenter(this, createRepository())
     private var totalCount: Int = 0
