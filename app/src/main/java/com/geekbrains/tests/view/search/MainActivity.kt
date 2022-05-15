@@ -26,13 +26,24 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 //    *. Выберите приложение из предыдущих курсов и покройте одну или несколько Активити тестами.
 
     private val adapter = SearchResultAdapter()
-    private val presenter: PresenterSearchContract = SearchPresenter(this, createRepository())
+    private lateinit var presenter: PresenterSearchContract<ViewSearchContract>
     private var totalCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        presenter = SearchPresenter(createRepository())
         setUI()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.attachView(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.detachView(this)
     }
 
     private fun setUI() {
