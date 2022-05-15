@@ -31,6 +31,7 @@ class SearchPresenterTest {
         MockitoAnnotations.initMocks(this)
         //Создаем Презентер, используя моки Репозитория и Вью, проинициализированные строкой выше
         presenter = SearchPresenter(repository)
+        presenter.attachView(viewContract)
     }
 
     @Test //Проверим вызов метода searchGitHub() у нашего Репозитория
