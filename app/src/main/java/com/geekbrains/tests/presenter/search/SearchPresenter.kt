@@ -14,37 +14,50 @@ import retrofit2.Response
  * выступая в роли регулировщика движения на перекрестке.
  */
 
-internal class SearchPresenter internal constructor(
-    private val viewContract: ViewSearchContract,
+internal class SearchPresenter<V : ViewSearchContract> internal constructor(
     private val repository: GitHubRepository
-) : PresenterSearchContract, GitHubRepositoryCallback {
+) : PresenterSearchContract<V>, GitHubRepositoryCallback {
+
+    private var currentView: V? = null
 
     override fun searchGitHub(searchQuery: String) {
-        viewContract.displayLoading(true)
+        currentView?.displayLoading(true)
         repository.searchGithub(searchQuery, this)
     }
 
     override fun handleGitHubResponse(response: Response<SearchResponse?>?) {
-        viewContract.displayLoading(false)
+        currentView?.displayLoading(false)
         if (response != null && response.isSuccessful) {
             val searchResponse = response.body()
             val searchResults = searchResponse?.searchResults
             val totalCount = searchResponse?.totalCount
             if (searchResults != null && totalCount != null) {
-                viewContract.displaySearchResults(
+                currentView?.displaySearchResults(
                     searchResults,
                     totalCount
                 )
             } else {
-                viewContract.displayError("Search results or total count are null")
+                currentView?.displayError("Search results or total count are null")
             }
         } else {
-            viewContract.displayError("Response is null or unsuccessful")
+            currentView?.displayError("Response is null or unsuccessful")
         }
     }
 
     override fun handleGitHubError() {
-        viewContract.displayLoading(false)
-        viewContract.displayError()
+        currentView?.displayLoading(false)
+        currentView?.displayError()
+    }
+
+    override fun attachView(view: V) {
+        if (view != currentView) {
+            currentView = view
+        }
+    }
+
+    override fun detachView(view: V) {
+        if (view == currentView) {
+            currentView = null
+        }
     }
 }

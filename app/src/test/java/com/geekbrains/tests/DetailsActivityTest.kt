@@ -16,6 +16,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
@@ -119,6 +120,48 @@ class DetailsActivityTest {
         val intent = DetailsActivity.getIntent(context, count)
         val bundle = intent.extras
         assertEquals(count, bundle?.getInt(DetailsActivity.TOTAL_COUNT_EXTRA, 0))
+    }
+
+    @Test
+    fun activity_beforeOnStart() {
+        val testActivity = Robolectric.buildActivity(DetailsActivity::class.java)
+            .create()
+            .get()
+
+        val decrementButton = testActivity.findViewById<Button>(R.id.decrementButton)
+        val totalCountTextView = testActivity.findViewById<TextView>(R.id.totalCountTextView)
+        decrementButton.performClick()
+
+        assertEquals("Number of results: 0", totalCountTextView.text)
+    }
+
+    @Test
+    fun activity_afterOnStart() {
+        val testActivity =
+            Robolectric.buildActivity(DetailsActivity::class.java)
+                .create().start().resume()
+                .get()
+
+        val decrementButton = testActivity.findViewById<Button>(R.id.decrementButton)
+        val totalCountTextView = testActivity.findViewById<TextView>(R.id.totalCountTextView)
+        decrementButton.performClick()
+
+        assertEquals("Number of results: -1", totalCountTextView.text)
+    }
+
+    @Test
+    fun activity_afterOnStop() {
+        val testActivity =
+            Robolectric.buildActivity(DetailsActivity::class.java)
+                .create().start().resume()
+                .pause().stop()
+                .get()
+
+        val decrementButton = testActivity.findViewById<Button>(R.id.decrementButton)
+        val totalCountTextView = testActivity.findViewById<TextView>(R.id.totalCountTextView)
+        decrementButton.performClick()
+
+        assertEquals("Number of results: 0", totalCountTextView.text)
     }
 
     @After
