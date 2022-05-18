@@ -36,6 +36,55 @@ class MainActivityEspressoTest {
         onView(withId(R.id.totalCountTextView)).check(matches(withText(TestUtils.getString(R.string.test_result))))
     }
 
+    @Test
+    fun searchEditText_CheckHint() {
+        onView(withId(R.id.searchEditText)).check(matches(withHint(R.string.search_hint)))
+    }
+
+    @Test
+    fun searchEditText_CheckText() {
+        val text = "root"
+        onView(withId(R.id.searchEditText)).perform(click())
+        onView(withId(R.id.searchEditText)).perform(replaceText(text), closeSoftKeyboard())
+        onView(withId(R.id.searchEditText)).check(matches(withText(text)))
+    }
+
+    @Test
+    fun toDetailsActivityButton_IsVisibleIsEnabled() {
+        onView(withId(R.id.toDetailsActivityButton)).check(
+            matches(
+                withEffectiveVisibility(
+                    Visibility.VISIBLE
+                )
+            )
+        )
+        onView(withId(R.id.toDetailsActivityButton)).check(matches((isEnabled())))
+    }
+
+    @Test
+    fun toDetailsActivityButton_CheckText() {
+        onView(withId(R.id.toDetailsActivityButton)).check(matches(withText(TestUtils.getString(R.string.to_details))))
+    }
+
+    @Test
+    fun toDetailsActivityButton_Click() {
+        onView(withId(R.id.toDetailsActivityButton)).perform(click())
+
+        onView(isRoot()).perform(delay())
+        onView(withId(R.id.decrementButton)).check(matches((isDisplayed())))
+        onView(withId(R.id.totalCountTextView))
+            .check(
+                matches(
+                    withText(
+                        String.format(
+                            TestUtils.getString(R.string.results_count),0
+                        )
+                    )
+                )
+            )
+        onView(withId(R.id.incrementButton)).check(matches((isDisplayed())))
+    }
+
     private fun delay(): ViewAction? {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> = isRoot()
@@ -45,22 +94,6 @@ class MainActivityEspressoTest {
             }
         }
     }
-
-//    searchEditText.
-//    заглушка без данных
-//
-//    searchEditText.
-//    ввели текст
-//
-//    toDetailsActivityButton
-//    кнопка видна и доступна для нажатия
-//
-//    toDetailsActivityButton
-//    текст кнопки
-//
-//    toDetailsActivityButton
-//    после нажатия на кнопку видны
-//    - и + и текст
 
     @After
     fun close() {
