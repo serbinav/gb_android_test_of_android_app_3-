@@ -19,11 +19,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
-//    1. Добавьте методы onAttach и onDetach в интерфейс PresenterContract.
-//    Теперь все Презентеры должны учитывать жизненный цикл View, который они хранят.
-//    2. Покройте тестами DetailsPresenter.
-//    3. Покройте тестами методы onAttach и onDetach в SearchPresenter.
-//    *. Выберите приложение из предыдущих курсов и покройте одну или несколько Активити тестами.
+//    1. Покройте тестами MainActivity
+//    (кроме элементов RecyclerView — список мы будем тестировать позже):
+//    убедитесь, что все элементы видны и корректно отображаются,
+//    что надписи на кнопке и в EditText верные и т. д.;
+//    2. Избавьтесь от проверки BuildConfig.TYPE == FAKE и
+//    разнесите разный код по разным классам в зависимости от Build Variants,
+//    как вы это делали на 12 занятии курса Андроид на Котлине.
+
+//    *. Передавайте Repository в конструктор Презентера через injection.
+//    Используйте для этого Dagger или Coin.
+//    *. Убедитесь, что тесты отрабатывают без ошибок после ваших изменений.
+//    *. Напишите Espresso-тесты для приложения, которое у вас уже есть в портфолио.
 
     private val adapter = SearchResultAdapter()
     private lateinit var presenter: PresenterSearchContract<ViewSearchContract>
@@ -79,7 +86,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         })
     }
 
-    private fun createRepository(): GitHubRepository {
+    private fun createRepository(): RepositoryContract {
         return GitHubRepository(createRetrofit().create(GitHubApi::class.java))
     }
 
@@ -94,6 +101,12 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         searchResults: List<SearchResult>,
         totalCount: Int
     ) {
+        with(totalCountTextView) {
+            visibility = View.VISIBLE
+            text =
+                String.format(Locale.getDefault(), getString(R.string.results_count), totalCount)
+        }
+
         this.totalCount = totalCount
         adapter.updateResults(searchResults)
     }

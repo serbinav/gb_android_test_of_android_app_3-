@@ -1,8 +1,8 @@
 package com.geekbrains.tests.presenter.search
 
 import com.geekbrains.tests.model.SearchResponse
-import com.geekbrains.tests.repository.GitHubRepository
-import com.geekbrains.tests.repository.GitHubRepository.GitHubRepositoryCallback
+import com.geekbrains.tests.presenter.RepositoryContract
+import com.geekbrains.tests.repository.RepositoryCallback
 import com.geekbrains.tests.view.search.ViewSearchContract
 import retrofit2.Response
 
@@ -15,8 +15,8 @@ import retrofit2.Response
  */
 
 internal class SearchPresenter<V : ViewSearchContract> internal constructor(
-    private val repository: GitHubRepository
-) : PresenterSearchContract<V>, GitHubRepositoryCallback {
+    private val repository: RepositoryContract
+) : PresenterSearchContract<V>, RepositoryCallback {
 
     private var currentView: V? = null
 
