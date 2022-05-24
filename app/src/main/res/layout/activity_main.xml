@@ -27,12 +27,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/search"
+        style="@style/Button.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        app:icon="@drawable/ic_baseline_search_24"
+        app:layout_constraintRight_toLeftOf="@+id/toDetailsActivityButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchEditText" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/toDetailsActivityButton"
-        android:layout_width="match_parent"
+        style="@style/Button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin"
         android:text="@string/to_details"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/search"
         app:layout_constraintTop_toBottomOf="@id/searchEditText" />
 
     <TextView
