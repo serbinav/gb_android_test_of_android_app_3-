@@ -1,4 +1,4 @@
-package com.geekbrains.tests
+package com.geekbrains.tests.espresso
 
 import android.view.View
 import androidx.test.core.app.ActivityScenario
@@ -9,6 +9,7 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.geekbrains.tests.R
 import com.geekbrains.tests.view.search.MainActivity
 import org.hamcrest.Matcher
 import org.junit.After
@@ -30,7 +31,7 @@ class MainActivityEspressoTest {
     fun activitySearch_IsWorking() {
         onView(withId(R.id.searchEditText)).perform(click())
         onView(withId(R.id.searchEditText)).perform(replaceText("algol"), closeSoftKeyboard())
-        onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
+        onView(withId(R.id.search)).perform(click())
 
         onView(isRoot()).perform(delay())
         onView(withId(R.id.totalCountTextView)).check(matches(withText(TestUtils.getString(R.string.test_result))))
@@ -85,7 +86,7 @@ class MainActivityEspressoTest {
         onView(withId(R.id.incrementButton)).check(matches((isDisplayed())))
     }
 
-    private fun delay(): ViewAction? {
+    private fun delay(): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> = isRoot()
             override fun getDescription(): String = "wait for $2 seconds"

@@ -2,42 +2,44 @@ package com.geekbrains.tests.view.search
 
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.geekbrains.tests.R
+import com.geekbrains.tests.databinding.ActivityMainBinding
 import com.geekbrains.tests.model.SearchResult
 import com.geekbrains.tests.presenter.RepositoryContract
 import com.geekbrains.tests.presenter.search.PresenterSearchContract
 import com.geekbrains.tests.presenter.search.SearchPresenter
 import com.geekbrains.tests.repository.FakeGitHubRepository
 import com.geekbrains.tests.view.details.DetailsActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
-//    1. Покройте тестами MainActivity
-//    (кроме элементов RecyclerView — список мы будем тестировать позже):
-//    убедитесь, что все элементы видны и корректно отображаются,
-//    что надписи на кнопке и в EditText верные и т. д.;
-//    2. Избавьтесь от проверки BuildConfig.TYPE == FAKE и
-//    разнесите разный код по разным классам в зависимости от Build Variants,
-//    как вы это делали на 12 занятии курса Андроид на Котлине.
+//    1. Избавьтесь от Espresso в вашем методе test_SearchIsPositive():
+//    добавьте отдельную кнопку поиска на экране MainActivity и нажимайте
+//    на нее чтобы запустить поиск и получить результат.
+//    2. У нас уже написан тест, который просто открывает DetailsScreen.
+//    Вам нужно написать еще один тест, в котором вы убедитесь, что после
+//    успешного выполнения запроса и получения нужного количества репозиториев,
+//    DetailsScreen отображает именно это количество.
+//    3. Покройте приложение тестами полностью: проверьте не только позитивные,
+//    но и негативные сценарии, проверьте функционал кнопок на DetailsScreen.
+//
+//    * Настройте UIautomator viewer на вашем компьютере: пропишите Enviroment
+//    Variables и запустите uiautomatorviewer.bat в папке bin.
+//    * Откройте приложение Настроек на своем смартфоне.
+//    * Откройте какое-то приложение помимо Настроек и нажмите в нем какую-нибудь кнопку.
 
-//    *. Передавайте Repository в конструктор Презентера через injection.
-//    Используйте для этого Dagger или Coin.
-//    *. Убедитесь, что тесты отрабатывают без ошибок после ваших изменений.
-//    *. Напишите Espresso-тесты для приложения, которое у вас уже есть в портфолио.
-
+    private lateinit var binding: ActivityMainBinding
     private val adapter = SearchResultAdapter()
     private lateinit var presenter: PresenterSearchContract<ViewSearchContract>
     private var totalCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         presenter = SearchPresenter(createRepository())
         setUI()
     }
@@ -53,36 +55,28 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     }
 
     private fun setUI() {
-        toDetailsActivityButton.setOnClickListener {
+        binding.toDetailsActivityButton.setOnClickListener {
             startActivity(DetailsActivity.getIntent(this, totalCount))
         }
-        setQueryListener()
         setRecyclerView()
+
+        binding.search.setOnClickListener{
+            val query = binding.searchEditText.text.toString()
+            if (query.isNotBlank()) {
+                presenter.searchGitHub(query)
+            } else {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.enter_search_word),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun setRecyclerView() {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
-    }
-
-    private fun setQueryListener() {
-        searchEditText.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val query = searchEditText.text.toString()
-                if (query.isNotBlank()) {
-                    presenter.searchGitHub(query)
-                    return@OnEditorActionListener true
-                } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.enter_search_word),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@OnEditorActionListener false
-                }
-            }
-            false
-        })
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = adapter
     }
 
     private fun createRepository(): RepositoryContract {
@@ -93,7 +87,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         searchResults: List<SearchResult>,
         totalCount: Int
     ) {
-        with(totalCountTextView) {
+        with(binding.totalCountTextView) {
             visibility = View.VISIBLE
             text =
                 String.format(Locale.getDefault(), getString(R.string.results_count), totalCount)
@@ -113,9 +107,9 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     override fun displayLoading(show: Boolean) {
         if (show) {
-            progressBar.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
         } else {
-            progressBar.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
         }
     }
 }
