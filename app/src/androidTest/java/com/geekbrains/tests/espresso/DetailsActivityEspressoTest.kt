@@ -1,4 +1,4 @@
-package com.geekbrains.tests
+package com.geekbrains.tests.espresso
 
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
@@ -8,6 +8,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.geekbrains.tests.R
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase
 import org.junit.After
