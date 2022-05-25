@@ -33,7 +33,7 @@ object TestUtils {
                     }
                 }
             } catch (ex: Exception) {
-                throw Exception(ex.message!!)
+                throw Exception(ex.message)
             }
             return false
         }
