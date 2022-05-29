@@ -8,4 +8,6 @@
     <string name="decrement_text">-</string>
     <string name="increment_text">+</string>
     <string name="to_details">to details</string>
+    <string name="error_null">Search results or total count are null</string>
+    <string name="error_response_null">Response is null or unsuccessful</string>
 </resources>

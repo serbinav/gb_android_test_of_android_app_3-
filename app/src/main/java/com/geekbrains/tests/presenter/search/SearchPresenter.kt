@@ -37,10 +37,10 @@ internal class SearchPresenter<V : ViewSearchContract> internal constructor(
                     totalCount
                 )
             } else {
-                currentView?.displayError("Search results or total count are null")
+                currentView?.displayErrorNull()
             }
         } else {
-            currentView?.displayError("Response is null or unsuccessful")
+            currentView?.displayErrorResponseNull()
         }
     }
 

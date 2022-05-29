@@ -107,6 +107,14 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
 
+    override fun displayErrorNull() {
+        Toast.makeText(this, getString(R.string.error_null), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun displayErrorResponseNull() {
+        Toast.makeText(this, getString(R.string.error_response_null), Toast.LENGTH_SHORT).show()
+    }
+
     override fun displayLoading(show: Boolean) {
         if (show) {
             binding.progressBar.visibility = View.VISIBLE
