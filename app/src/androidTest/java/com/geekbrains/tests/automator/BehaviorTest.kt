@@ -18,7 +18,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
 class BehaviorTest {
@@ -49,7 +48,7 @@ class BehaviorTest {
             context.startActivity(intent)
 
             //Ждем, когда приложение откроется на смартфоне чтобы начать тестировать его элементы
-            uiDevice.wait(Until.hasObject(By.pkg(packageName).depth(0)), TIMEOUT)
+            uiDevice.wait(Until.hasObject(By.pkg(packageName).depth(0)), TestUtils.TIMEOUT)
         } else {
             throw Exception("Не удалось запустить Activity")
         }
@@ -59,30 +58,22 @@ class BehaviorTest {
     //и проверить его на null
     @Test
     fun test_MainActivityIsStarted() {
-        //Через uiDevice находим editText
-        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
-        //Проверяем на null
-        Assert.assertNotNull(editText)
+        //Через uiDevice находим editText и проверяем на null
+        Assert.assertNotNull(TestUtils.getSearchEditText(uiDevice, packageName))
     }
 
     //Убеждаемся, что поиск работает как ожидается
     @Test
     fun test_SearchIsPositive() {
-        //Через uiDevice находим editText
-        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
-        //Устанавливаем значение
-        editText.text = "UiAutomator"
+        //Через uiDevice находим editText и устанавливаем значение
+        TestUtils.getSearchEditText(uiDevice, packageName).text = TestUtils.SEARCH_QUERY
 
-        val searchButton = uiDevice.findObject(By.res(packageName, "search"))
-        searchButton.click()
+        TestUtils.getSearch(uiDevice, packageName).click()
 
         //Ожидаем конкретного события: появления текстового поля totalCountTextView.
         //Это будет означать, что сервер вернул ответ с какими-то данными, то есть запрос отработал.
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
+        val changedText = TestUtils.getTotalCountTextView(uiDevice, packageName)
+
         //Убеждаемся, что сервер вернул корректный результат. Обратите внимание, что количество
         //результатов может варьироваться во времени, потому что количество репозиториев постоянно меняется.
         Assert.assertEquals(changedText.text.toString(), TestUtils.getString(R.string.test_result))
@@ -91,23 +82,14 @@ class BehaviorTest {
     //Убеждаемся, что DetailsScreen открывается
     @Test
     fun test_OpenDetailsScreen() {
-        //Находим кнопку
-        val toDetails: UiObject2 = uiDevice.findObject(
-            By.res(
-                packageName,
-                "toDetailsActivityButton"
-            )
-        )
-        //Кликаем по ней
-        toDetails.click()
+        //Находим кнопку и кликаем по ней
+        TestUtils.getToDetailsActivityButton(uiDevice, packageName)
+            .clickAndWait(Until.newWindow(), TestUtils.TIMEOUT)
 
         //Ожидаем конкретного события: появления текстового поля totalCountTextView.
         //Это будет означать, что DetailsScreen открылся и это поле видно на экране.
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
+        val changedText = TestUtils.getTotalCountTextView(uiDevice, packageName)
+
         //Убеждаемся, что поле видно и содержит предполагаемый текст.
         //Обратите внимание, что текст должен быть "Number of results: 0",
         //так как мы кликаем по кнопке не отправляя никаких поисковых запросов.
@@ -121,32 +103,20 @@ class BehaviorTest {
 
     @Test
     fun test_DetailsScreenDisplayCorrectData() {
-        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
-        editText.text = "UiAutomator"
+        TestUtils.getSearchEditText(uiDevice, packageName).text = TestUtils.SEARCH_QUERY
 
-        val searchButton = uiDevice.findObject(By.res(packageName, "search"))
-        searchButton.click()
+        TestUtils.getSearch(uiDevice, packageName).click()
 
-        val toDetails: UiObject2 = uiDevice.findObject(
-            By.res(
-                packageName,
-                "toDetailsActivityButton"
-            )
-        )
-        toDetails.clickAndWait(Until.newWindow(), TIMEOUT)
+        TestUtils.getToDetailsActivityButton(uiDevice, packageName)
+            .clickAndWait(Until.newWindow(), TestUtils.TIMEOUT)
 
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
+        val changedText = TestUtils.getTotalCountTextView(uiDevice, packageName)
         Assert.assertEquals(changedText.text.toString(), TestUtils.getString(R.string.test_result))
     }
 
     @Test
     fun test_EmptySearch() {
-        val searchButton = uiDevice.findObject(By.res(packageName, "search"))
-        searchButton.click()
+        TestUtils.getSearch(uiDevice, packageName).click()
 
         onView(withText(TestUtils.getString(R.string.enter_search_word)))
             .inRoot(TestUtils.ToastMatcher())
@@ -155,11 +125,9 @@ class BehaviorTest {
 
     @Test
     fun test_SearchWithSpace() {
-        val editText = uiDevice.findObject(By.res(packageName, "searchEditText"))
-        editText.text = " "
+        TestUtils.getSearchEditText(uiDevice, packageName).text = " "
 
-        val searchButton = uiDevice.findObject(By.res(packageName, "search"))
-        searchButton.click()
+        TestUtils.getSearch(uiDevice, packageName).click()
 
         onView(withText(TestUtils.getString(R.string.enter_search_word)))
             .inRoot(TestUtils.ToastMatcher())
@@ -168,19 +136,10 @@ class BehaviorTest {
 
     @Test
     fun test_DecrementButton() {
-        val toDetails: UiObject2 = uiDevice.findObject(
-            By.res(
-                packageName,
-                "toDetailsActivityButton"
-            )
-        )
-        toDetails.clickAndWait(Until.newWindow(), TIMEOUT)
+        TestUtils.getToDetailsActivityButton(uiDevice, packageName)
+            .clickAndWait(Until.newWindow(), TestUtils.TIMEOUT)
 
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
+        val changedText = TestUtils.getTotalCountTextView(uiDevice, packageName)
         Assert.assertEquals(
             changedText.text.toString(),
             String.format(TestUtils.getString(R.string.results_count), 0)
@@ -202,19 +161,10 @@ class BehaviorTest {
 
     @Test
     fun test_IncrementButton() {
-        val toDetails: UiObject2 = uiDevice.findObject(
-            By.res(
-                packageName,
-                "toDetailsActivityButton"
-            )
-        )
-        toDetails.clickAndWait(Until.newWindow(), TIMEOUT)
+        TestUtils.getToDetailsActivityButton(uiDevice, packageName)
+            .clickAndWait(Until.newWindow(), TestUtils.TIMEOUT)
 
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
+        val changedText = TestUtils.getTotalCountTextView(uiDevice, packageName)
         Assert.assertEquals(
             changedText.text.toString(),
             String.format(TestUtils.getString(R.string.results_count), 0)
@@ -222,8 +172,7 @@ class BehaviorTest {
 
         val incrementBtn: UiObject2 = uiDevice.findObject(
             By.res(
-                packageName,
-                "incrementButton"
+                packageName, "incrementButton"
             )
         )
         incrementBtn.click()
@@ -236,19 +185,10 @@ class BehaviorTest {
 
     @Test
     fun test_ScreenBackButton() {
-        val toDetails: UiObject2 = uiDevice.findObject(
-            By.res(
-                packageName,
-                "toDetailsActivityButton"
-            )
-        )
-        toDetails.clickAndWait(Until.newWindow(), TIMEOUT)
+        val toDetails = TestUtils.getToDetailsActivityButton(uiDevice, packageName)
+        toDetails.clickAndWait(Until.newWindow(), TestUtils.TIMEOUT)
 
-        val changedText =
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "totalCountTextView")),
-                TIMEOUT
-            )
+        val changedText = TestUtils.getTotalCountTextView(uiDevice, packageName)
         Assert.assertEquals(
             changedText.text.toString(),
             String.format(TestUtils.getString(R.string.results_count), 0)
@@ -261,9 +201,5 @@ class BehaviorTest {
             toDetails.text.toString(),
             TestUtils.getString(R.string.to_details).toUpperCase()
         )
-    }
-
-    companion object {
-        private const val TIMEOUT = 5000L
     }
 }

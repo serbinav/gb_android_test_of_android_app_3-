@@ -1,14 +1,23 @@
 package com.geekbrains.tests.espresso
 
 import android.content.Context
+import android.view.View
 import android.view.WindowManager
 import androidx.annotation.StringRes
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Root
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.uiautomator.*
 import org.hamcrest.Description
+import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
 object TestUtils {
+    const val SEARCH_QUERY = "some query"
+    const val TIMEOUT = 5000L
+
     fun getString(@StringRes stringRes: Int): String {
         try {
             return ApplicationProvider.getApplicationContext<Context>().getString(stringRes)
@@ -37,5 +46,34 @@ object TestUtils {
             }
             return false
         }
+    }
+
+    fun delay(): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> = ViewMatchers.isRoot()
+            override fun getDescription(): String = "wait for $2 seconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(2000)
+            }
+        }
+    }
+
+    fun getSearchEditText(uiDevice: UiDevice, packageName: String): UiObject2 {
+        return uiDevice.findObject(By.res(packageName, "searchEditText"))
+    }
+
+    fun getSearch(uiDevice: UiDevice, packageName: String): UiObject2 {
+        return uiDevice.findObject(By.res(packageName, "search"))
+    }
+
+    fun getToDetailsActivityButton(uiDevice: UiDevice, packageName: String): UiObject2 {
+        return uiDevice.findObject(By.res(packageName, "toDetailsActivityButton"))
+    }
+
+    fun getTotalCountTextView(uiDevice: UiDevice, packageName: String): UiObject2 {
+        return uiDevice.wait(
+            Until.findObject(By.res(packageName, "totalCountTextView")),
+            TIMEOUT
+        )
     }
 }

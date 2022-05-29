@@ -36,11 +36,10 @@ class SearchPresenterTest {
 
     @Test //Проверим вызов метода searchGitHub() у нашего Репозитория
     fun searchGitHub_Test() {
-        val searchQuery = "some query"
         //Запускаем код, функционал которого хотим протестировать
-        presenter.searchGitHub("some query")
+        presenter.searchGitHub(TestUt.SEARCH_QUERY)
         //Убеждаемся, что все работает как надо
-        verify(repository, times(1)).searchGithub(searchQuery, presenter)
+        verify(repository, times(1)).searchGithub(TestUt.SEARCH_QUERY, presenter)
     }
 
     @Test //Проверяем работу метода handleGitHubError()
@@ -76,7 +75,7 @@ class SearchPresenterTest {
 
         //Убеждаемся, что вызывается верный метод: viewContract.displayError("Response is null or unsuccessful"), и что он вызывается единожды
         verify(viewContract, times(1))
-            .displayError("Response is null or unsuccessful")
+            .displayErrorResponseNull()
     }
 
     @Test //Проверим порядок вызова методов viewContract
@@ -89,7 +88,8 @@ class SearchPresenterTest {
         val inOrder = inOrder(viewContract)
         //Прописываем порядок вызова методов
         inOrder.verify(viewContract).displayLoading(false)
-        inOrder.verify(viewContract).displayError("Response is null or unsuccessful")
+        inOrder.verify(viewContract)
+            .displayErrorResponseNull()
     }
 
     @Test //Проверим пустой ответ сервера
@@ -125,7 +125,7 @@ class SearchPresenterTest {
 
         //Убеждаемся, что вызывается верный метод: viewContract.displayError("Search results or total count are null"), и что он вызывается единожды
         verify(viewContract, times(1))
-            .displayError("Search results or total count are null")
+            .displayErrorNull()
     }
 
     @Test //Пришло время проверить успешный ответ, так как все остальные случаи мы уже покрыли тестами
