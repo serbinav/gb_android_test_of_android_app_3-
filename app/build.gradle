@@ -58,6 +58,15 @@ android {
         }
     }
 
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTestData/java"
+        }
+        test {
+            java.srcDirs += "src/sharedTestData/java"
+        }
+    }
+
     variantFilter {
         if (name == "fakeRelease") {
             setIgnore(true)
@@ -78,6 +87,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0-alpha05'
 
     //Mockito
     testImplementation "org.mockito:mockito-core:2.19.0"
@@ -98,4 +108,5 @@ dependencies {
 
     //UI Automator
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    testImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }

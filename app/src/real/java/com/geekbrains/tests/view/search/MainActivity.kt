@@ -19,20 +19,12 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
-//    1. Избавьтесь от Espresso в вашем методе test_SearchIsPositive():
-//    добавьте отдельную кнопку поиска на экране MainActivity и нажимайте
-//    на нее чтобы запустить поиск и получить результат.
-//    2. У нас уже написан тест, который просто открывает DetailsScreen.
-//    Вам нужно написать еще один тест, в котором вы убедитесь, что после
-//    успешного выполнения запроса и получения нужного количества репозиториев,
-//    DetailsScreen отображает именно это количество.
-//    3. Покройте приложение тестами полностью: проверьте не только позитивные,
-//    но и негативные сценарии, проверьте функционал кнопок на DetailsScreen.
+//    1. Вынесите общий функционал или общие переменные в отдельные общедоступные классы.
+//    2. Разберите автоматически сгенерированный тестовый класс Test Recorder’а.
+//    3. Используйте Firebase Test Lab для тестирования вашего приложения.
 //
-//    * Настройте UIautomator viewer на вашем компьютере: пропишите Enviroment
-//    Variables и запустите uiautomatorviewer.bat в папке bin.
-//    * Откройте приложение Настроек на своем смартфоне.
-//    * Откройте какое-то приложение помимо Настроек и нажмите в нем какую-нибудь кнопку.
+//    * Сгенерируйте свой собственный тестовый класс с использованием Test Recorder’а.
+//    * Протестируйте свое приложение через Remote Test Lab от Самсунг.
 
     private lateinit var binding: ActivityMainBinding
     private val adapter = SearchResultAdapter()
@@ -113,6 +105,14 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     override fun displayError(error: String) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun displayErrorNull() {
+        Toast.makeText(this, getString(R.string.error_null), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun displayErrorResponseNull() {
+        Toast.makeText(this, getString(R.string.error_response_null), Toast.LENGTH_SHORT).show()
     }
 
     override fun displayLoading(show: Boolean) {
