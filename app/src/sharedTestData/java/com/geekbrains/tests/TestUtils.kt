@@ -1,4 +1,4 @@
-package com.geekbrains.tests.espresso
+package com.geekbrains.tests
 
 import android.content.Context
 import android.view.View
@@ -9,10 +9,10 @@ import androidx.test.espresso.Root
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.uiautomator.*
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
+import androidx.test.uiautomator.*
 
 object TestUtils {
     const val SEARCH_QUERY = "some query"

@@ -57,7 +57,7 @@ class DetailsActivityTest {
         scenario.onActivity {
             val totalCountTextView = it.findViewById<TextView>(R.id.totalCountTextView)
             assertEquals(
-                String.format(TestUt.getString(R.string.results_count), 0),
+                String.format(TestUtils.getString(R.string.results_count), 0),
                 totalCountTextView.text
             )
         }
@@ -90,7 +90,7 @@ class DetailsActivityTest {
             incrementButton.performClick()
 
             assertEquals(
-                String.format(TestUt.getString(R.string.results_count), 1),
+                String.format(TestUtils.getString(R.string.results_count), 1),
                 totalCountTextView.text
             )
         }
@@ -104,7 +104,7 @@ class DetailsActivityTest {
             decrementButton.performClick()
 
             assertEquals(
-                String.format(TestUt.getString(R.string.results_count), -1),
+                String.format(TestUtils.getString(R.string.results_count), -1),
                 totalCountTextView.text
             )
         }
@@ -142,7 +142,7 @@ class DetailsActivityTest {
         decrementButton.performClick()
 
         assertEquals(
-            String.format(TestUt.getString(R.string.results_count), 0),
+            String.format(TestUtils.getString(R.string.results_count), 0),
             totalCountTextView.text
         )
     }
@@ -159,7 +159,7 @@ class DetailsActivityTest {
         decrementButton.performClick()
 
         assertEquals(
-            String.format(TestUt.getString(R.string.results_count), -1),
+            String.format(TestUtils.getString(R.string.results_count), -1),
             totalCountTextView.text
         )
     }
@@ -177,7 +177,7 @@ class DetailsActivityTest {
         decrementButton.performClick()
 
         assertEquals(
-            String.format(TestUt.getString(R.string.results_count), 0),
+            String.format(TestUtils.getString(R.string.results_count), 0),
             totalCountTextView.text
         )
     }

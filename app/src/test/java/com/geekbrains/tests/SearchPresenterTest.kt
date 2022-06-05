@@ -37,9 +37,9 @@ class SearchPresenterTest {
     @Test //Проверим вызов метода searchGitHub() у нашего Репозитория
     fun searchGitHub_Test() {
         //Запускаем код, функционал которого хотим протестировать
-        presenter.searchGitHub(TestUt.SEARCH_QUERY)
+        presenter.searchGitHub(TestUtils.SEARCH_QUERY)
         //Убеждаемся, что все работает как надо
-        verify(repository, times(1)).searchGithub(TestUt.SEARCH_QUERY, presenter)
+        verify(repository, times(1)).searchGithub(TestUtils.SEARCH_QUERY, presenter)
     }
 
     @Test //Проверяем работу метода handleGitHubError()

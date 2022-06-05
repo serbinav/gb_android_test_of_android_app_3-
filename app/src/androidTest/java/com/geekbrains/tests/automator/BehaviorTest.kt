@@ -12,7 +12,7 @@ import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.*
 import com.geekbrains.tests.R
-import com.geekbrains.tests.espresso.TestUtils
+import com.geekbrains.tests.TestUtils
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -9,6 +9,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.R
+import com.geekbrains.tests.TestUtils
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase
 import org.junit.After
